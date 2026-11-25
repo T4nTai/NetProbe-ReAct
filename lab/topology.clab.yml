@@ -1,0 +1,148 @@
+name: b2-net-rca
+
+topology:
+  defaults:
+    kind: linux
+
+  nodes:
+    # --- 6 FRRouting Routers ---
+    r1:
+      image: b2-frr:latest
+      binds:
+        - configs/frr/daemons:/etc/frr/daemons:ro
+        - configs/frr/vtysh.conf:/etc/frr/vtysh.conf:ro
+        - configs/r1/frr.conf:/etc/frr/frr.conf:ro
+      sysctls:
+        net.ipv4.ip_forward: 1
+        net.ipv4.conf.all.rp_filter: 0
+        net.ipv4.conf.default.rp_filter: 0
+      exec:
+        - sh -c "for f in /proc/sys/net/ipv4/conf/*/rp_filter; do echo 0 > $f; done"
+
+    r2:
+      image: b2-frr:latest
+      binds:
+        - configs/frr/daemons:/etc/frr/daemons:ro
+        - configs/frr/vtysh.conf:/etc/frr/vtysh.conf:ro
+        - configs/r2/frr.conf:/etc/frr/frr.conf:ro
+      sysctls:
+        net.ipv4.ip_forward: 1
+        net.ipv4.conf.all.rp_filter: 0
+        net.ipv4.conf.default.rp_filter: 0
+      exec:
+        - sh -c "for f in /proc/sys/net/ipv4/conf/*/rp_filter; do echo 0 > $f; done"
+
+    r3:
+      image: b2-frr:latest
+      binds:
+        - configs/frr/daemons:/etc/frr/daemons:ro
+        - configs/frr/vtysh.conf:/etc/frr/vtysh.conf:ro
+        - configs/r3/frr.conf:/etc/frr/frr.conf:ro
+      sysctls:
+        net.ipv4.ip_forward: 1
+        net.ipv4.conf.all.rp_filter: 0
+        net.ipv4.conf.default.rp_filter: 0
+      exec:
+        - sh -c "for f in /proc/sys/net/ipv4/conf/*/rp_filter; do echo 0 > $f; done"
+
+    r4:
+      image: b2-frr:latest
+      binds:
+        - configs/frr/daemons:/etc/frr/daemons:ro
+        - configs/frr/vtysh.conf:/etc/frr/vtysh.conf:ro
+        - configs/r4/frr.conf:/etc/frr/frr.conf:ro
+      sysctls:
+        net.ipv4.ip_forward: 1
+        net.ipv4.conf.all.rp_filter: 0
+        net.ipv4.conf.default.rp_filter: 0
+      exec:
+        - sh -c "for f in /proc/sys/net/ipv4/conf/*/rp_filter; do echo 0 > $f; done"
+
+    r5:
+      image: b2-frr:latest
+      binds:
+        - configs/frr/daemons:/etc/frr/daemons:ro
+        - configs/frr/vtysh.conf:/etc/frr/vtysh.conf:ro
+        - configs/r5/frr.conf:/etc/frr/frr.conf:ro
+      sysctls:
+        net.ipv4.ip_forward: 1
+        net.ipv4.conf.all.rp_filter: 0
+        net.ipv4.conf.default.rp_filter: 0
+      exec:
+        - sh -c "for f in /proc/sys/net/ipv4/conf/*/rp_filter; do echo 0 > $f; done"
+
+    isp:
+      image: b2-frr:latest
+      binds:
+        - configs/frr/daemons:/etc/frr/daemons:ro
+        - configs/frr/vtysh.conf:/etc/frr/vtysh.conf:ro
+        - configs/isp/frr.conf:/etc/frr/frr.conf:ro
+      sysctls:
+        net.ipv4.ip_forward: 1
+        net.ipv4.conf.all.rp_filter: 0
+        net.ipv4.conf.default.rp_filter: 0
+      exec:
+        - sh -c "for f in /proc/sys/net/ipv4/conf/*/rp_filter; do echo 0 > $f; done"
+
+    # --- 1 Linux Bridge Switch ---
+    sw1:
+      image: b2-node:latest
+      exec:
+        - ip link add br0 type bridge
+        - ip link set br0 type bridge stp_state 0
+        - ip link set br0 up
+        - ip link set eth1 master br0
+        - ip link set eth2 master br0
+        - ip link set eth3 master br0
+        - ip link set eth1 up
+        - ip link set eth2 up
+        - ip link set eth3 up
+
+    # --- 4 End Hosts ---
+    h1:
+      image: b2-node:latest
+      exec:
+        - ip addr add 10.1.2.10/24 dev eth1
+        - ip link set eth1 up
+        - ip route replace default via 10.1.2.1 dev eth1
+
+    h2:
+      image: b2-node:latest
+      exec:
+        - ip addr add 10.1.4.10/24 dev eth1
+        - ip link set eth1 up
+        - ip route replace default via 10.1.4.1 dev eth1
+
+    h3:
+      image: b2-node:latest
+      exec:
+        - ip addr add 10.1.5.10/24 dev eth1
+        - ip link set eth1 up
+        - ip route replace default via 10.1.5.1 dev eth1
+
+    h4:
+      image: b2-node:latest
+      exec:
+        - ip addr add 203.0.113.10/24 dev eth1
+        - ip link set eth1 up
+        - ip route replace default via 203.0.113.1 dev eth1
+
+  links:
+    # Region 1: SW1 single-path segment (R1, R2, R3)
+    - endpoints: ["r1:eth1", "sw1:eth1"]
+    - endpoints: ["r2:eth1", "sw1:eth2"]
+    - endpoints: ["r3:eth1", "sw1:eth3"]
+
+    # Region 2: R1-R4-R5 redundant triangle
+    - endpoints: ["r1:eth2", "r4:eth1"]
+    - endpoints: ["r1:eth3", "r5:eth1"]
+    - endpoints: ["r4:eth2", "r5:eth2"]
+
+    # External eBGP link (R1 <-> ISP)
+    - endpoints: ["r1:eth4", "isp:eth1"]
+
+    # Host access links
+    - endpoints: ["r2:eth2", "h1:eth1"]
+    - endpoints: ["r4:eth3", "h2:eth1"]
+    - endpoints: ["r5:eth3", "h3:eth1"]
+    - endpoints: ["isp:eth2", "h4:eth1"]

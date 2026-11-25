@@ -9,27 +9,47 @@ env/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+.ipynb_checkpoints/
 
-# Environment & secrets
+# Environment, secrets & keys
 .env
-.env.local
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa*
+id_ed25519*
 
 # Containerlab generated artifacts
-lab/clab-*/
-clab-*/
+**/clab-*/
 *.bak
-.topology.clab.yml.bak
+**/*.clab.yml.bak
+**/.topology.clab.yml.bak
+
+# Logs, captures & temp files
+*.log
+*.pcap
+*.pcapng
+*.tmp
+*.swp
+*~
 
 # Generated datasets & benchmark outputs (keep folder structure via .gitkeep)
 data/dev/*
 !data/dev/.gitkeep
 data/test/*
 !data/test/.gitkeep
+data/raw/
+data/tmp/
 results/*
 !results/.gitkeep
 
 # OS & Editor
 .DS_Store
 Thumbs.db
+desktop.ini
 .vscode/
 .idea/

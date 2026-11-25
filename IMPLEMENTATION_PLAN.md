@@ -1,6 +1,6 @@
 # Kế hoạch triển khai Dự án — Đề tài B2: ReAct Agent định vị nguyên nhân sự cố mạng
 
-Kế hoạch này cụ thể hóa proposal [Group1_B2_Proposal.pdf](file:///c:/Users/Admin/NT539/Big-Project/Group1_B2_Proposal.pdf) thành lộ trình kỹ thuật rõ ràng, đảm bảo tiến độ, tính công bằng thực nghiệm và khả năng demo thực tế.
+Kế hoạch này cụ thể hóa proposal [Group1_B2_Proposal.pdf](Group1_B2_Proposal.pdf) thành lộ trình kỹ thuật rõ ràng, đảm bảo tiến độ, tính công bằng thực nghiệm và khả năng demo thực tế.
 
 ---
 

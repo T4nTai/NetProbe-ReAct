@@ -1,0 +1,11 @@
+FROM quay.io/frrouting/frr:10.2.1
+
+RUN apk add --no-cache \
+    iproute2 \
+    iputils \
+    traceroute \
+    iptables \
+    tcpdump \
+    bash \
+    && mkdir -p /var/log/frr \
+    && chown -R frr:frr /var/log/frr
