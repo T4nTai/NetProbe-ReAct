@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Environment & secrets
+.env
+.env.local
+
+# Containerlab generated artifacts
+lab/clab-*/
+clab-*/
+*.bak
+.topology.clab.yml.bak
+
+# Generated datasets & benchmark outputs (keep folder structure via .gitkeep)
+data/dev/*
+!data/dev/.gitkeep
+data/test/*
+!data/test/.gitkeep
+results/*
+!results/.gitkeep
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

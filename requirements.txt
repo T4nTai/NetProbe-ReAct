@@ -1,0 +1,28 @@
+# Core LLM & Agent Framework
+langgraph>=0.2.0
+langchain-core>=0.3.0
+langchain-openai>=0.2.0
+openai>=1.50.0
+
+# Data validation & config
+pydantic>=2.8.0
+pydantic-settings>=2.4.0
+pyyaml>=6.0.1
+python-dotenv>=1.0.1
+
+# Data analysis, evaluation & plotting
+numpy>=1.26.0
+pandas>=2.2.0
+scikit-learn>=1.5.0
+matplotlib>=3.9.0
+seaborn>=0.13.0
+tiktoken>=0.7.0
+
+# CLI & Demo utilities
+rich>=13.8.0
+typer>=0.12.0
+tenacity>=9.0.0
+
+# Testing & linting
+pytest>=8.3.0
+ruff>=0.6.0

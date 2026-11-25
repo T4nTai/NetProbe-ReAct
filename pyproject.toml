@@ -1,0 +1,16 @@
+[project]
+name = "b2-network-rca-agent"
+version = "0.1.0"
+description = "ReAct Agent for Network Root Cause Analysis on Containerlab + FRRouting"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
